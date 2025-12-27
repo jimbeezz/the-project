@@ -1,6 +1,4 @@
-# Code Quality Assessment Tool
-
-[![CI/CD Status](https://github.com/USERNAME/the-project/workflows/Code%20Quality%20Assessment%20CI%2FCD/badge.svg)](https://github.com/USERNAME/the-project/actions)
+# Code Quality Assessment Tool/ Автор : jimbeez
 
 ## Описание
 
@@ -282,9 +280,6 @@ Overall Score =
 
 Этот проект создан в образовательных целях.
 
-## Автор
-
-Проект разработан для курса по ИИ в образовании.
 
 ## Ссылки
 
