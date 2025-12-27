@@ -1,0 +1,72 @@
+name: Code Quality Assessment CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run tests with pytest
+      run: |
+        pytest tests/ -v --cov=src --cov-report=html --cov-report=term
+    
+    - name: Check code style with flake8
+      run: |
+        flake8 src/ tests/ --max-line-length=79 --exclude=__pycache__ || true
+    
+    - name: Format check with black
+      run: |
+        black --check src/ tests/ || true
+    
+    - name: Analyze student code
+      run: |
+        python -m src.main data/students/ --format html --output reports/student_code_report.html || echo "No student code found"
+        python -m src.main data/students/ --format json --output reports/student_code_report.json || echo "No student code found"
+        python -m src.main src/ --format html --output reports/project_code_report.html
+    
+    - name: Upload test coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false
+    
+    - name: Upload reports as artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: code-quality-reports
+        path: |
+          reports/*.html
+          reports/*.json
+          htmlcov/
+        retention-days: 30
+    
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: coverage-report
+        path: htmlcov/
+        retention-days: 30
+
