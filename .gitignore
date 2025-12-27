@@ -26,3 +26,22 @@ data/*.xlsx
 # Generated files
 *.log
 .DS_Store
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+.pytest_cache/
+.tox/
+
+# Reports (keep directory structure)
+reports/*.html
+reports/*.json
+!reports/.gitkeep
+
+# Python cache
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
